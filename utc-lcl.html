@@ -38,9 +38,13 @@ cpm = new Image(); cpm.src = "digital-clock2/cpm.gif";
 cs1 = new Image(); cs1.src = "digital-clock2/cs1.gif";
 csb = new Image(); csb.src = "digital-clock2/csb.gif";
 ctz = new Image(); ctz.src = "digital-clock2/localshort.gif";
-if (typeof stdOffset != 'undefined') {
-  ctzlst = new Image(); ctzlst.src = timezoneImageLST;
-  ctzldt = new Image(); ctzldt.src = timezoneImageLDT;
+ctzlst = ctz;
+ctzldt = ctz;
+if (typeof timezoneImageLST != 'undefined') {
+  ctzlst.src = timezoneImageLST;
+}
+if (typeof timezoneImageLDT != 'undefined') {
+  ctzldt.src = timezoneImageLDT;
 }
 cd1 = new Image(); cd1.src = "digital-clock2/cd1.gif";
 cd2 = new Image(); cd2.src = "digital-clock2/cd2.gif";
@@ -54,11 +58,8 @@ cd0 = new Image(); cd0.src = "digital-clock2/cd0.gif";
 function extract(h,m,s,mm,dd,type,hu,mmu,ddu,daylight,day,dayu) {
 if (!document.images) return;
 
-if (typeof stdOffset != 'undefined') {
-  if (daylight) document.images.tz.src = ctzldt.src;
-  else document.images.tz.src = ctzlst.src;
-}
-else document.images.tz.src = ctz.src; 
+if (daylight) document.images.tz.src = ctzldt.src;
+else document.images.tz.src = ctzlst.src;
 
 if (mmu <= 9) {
 document.images.kk.src = csb.src;

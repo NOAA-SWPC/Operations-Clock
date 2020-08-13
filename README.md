@@ -1,0 +1,25 @@
+# Operations Clock
+
+## History:
+
+This clock was originally developed for the National Hurricane Center in 2004, and has become popular in operations centers, especially in FEMA and the National Weather Service.
+
+## Instructions:
+
+To launch the clock, either launch locally or via a webserver one of these html files. For best appearance, full screen the browser.
+Make sure the computer running the web browser has a system clock in sync with the atomic clock.
+
+## Clocks:
+
+* utc-lcl.html (preferred)
+* zulu.html
+* universal.html
+* local.html
+* universal-local.html
+* countdown.html
+
+index.html points to utc-lcl.html as the preferred clock, but any of the other clocks can be used.
+
+The utc-lcl clock can be customized with your specific local timezone in the bottom left using the settings.js file.  Samples are provided for eastern and central timezones.
+
+Currently only local tz images available for EST, EDT, CST, CDT.  More images can be made for other timezones.

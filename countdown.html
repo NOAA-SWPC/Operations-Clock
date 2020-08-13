@@ -1,0 +1,157 @@
+<html>
+
+<head>
+
+<script type="text/javascript" src="settings.js"></script>
+
+<script type="text/javascript">
+
+<!-- Begin
+//Created by DendE PhisH
+function getTime() {
+c1 = new Image(); c1.src = "digital-clock2/c1.gif";
+c2 = new Image(); c2.src = "digital-clock2/c2.gif";
+c3 = new Image(); c3.src = "digital-clock2/c3.gif";
+c4 = new Image(); c4.src = "digital-clock2/c4.gif";
+c5 = new Image(); c5.src = "digital-clock2/c5.gif";
+c6 = new Image(); c6.src = "digital-clock2/c6.gif";
+c7 = new Image(); c7.src = "digital-clock2/c7.gif";
+c8 = new Image(); c8.src = "digital-clock2/c8.gif";
+c9 = new Image(); c9.src = "digital-clock2/c9.gif";
+c0 = new Image(); c0.src = "digital-clock2/c0.gif";
+cc = new Image(); cc.src = "digital-clock2/cc.gif";
+now = new Date();
+
+
+
+later = countdownDate;
+left = later-now;
+days = left / 1000 / 60 / 60 / 24;
+daysRound = Math.floor(days);
+hours = left / 1000 / 60 / 60 - (24 * daysRound);
+hoursRound = Math.floor(hours);
+minutes = left / 1000 /60 - (24 * 60 * daysRound) - (60 * hoursRound);
+minutesRound = Math.floor(minutes);
+seconds = left / 1000 - (24 * 60 * 60 * daysRound) - (60 * 60 * hoursRound) - (60 * minutesRound);
+secondsRound = Math.round(seconds);
+
+if(left < 0){
+
+}
+else{
+
+if (secondsRound <= 9) {
+document.images.g.src = c0.src;
+document.images.h.src = eval("c"+secondsRound+".src");
+}
+else {
+document.images.g.src = eval("c"+Math.floor(secondsRound/10)+".src");
+document.images.h.src = eval("c"+(secondsRound%10)+".src");
+}
+if (minutesRound <= 9) {
+document.images.d.src = c0.src;
+document.images.e.src = eval("c"+minutesRound+".src");
+}
+else {
+document.images.d.src = eval("c"+Math.floor(minutesRound/10)+".src");
+document.images.e.src = eval("c"+(minutesRound%10)+".src");
+}
+if (hoursRound <= 9) {
+document.images.y.src = c0.src;
+document.images.z.src = eval("c"+hoursRound+".src");
+}
+else {
+document.images.y.src = eval("c"+Math.floor(hoursRound/10)+".src");
+document.images.z.src = eval("c"+(hoursRound%10)+".src");
+}
+if (daysRound <= 9) {
+document.images.x.src = c0.src;
+document.images.a.src = c0.src;
+document.images.b.src = eval("c"+daysRound+".src");
+}
+if (daysRound <= 99) {
+document.images.x.src = c0.src;
+document.images.a.src = eval("c"+Math.floor((daysRound/10)%10)+".src");
+document.images.b.src = eval("c"+Math.floor(daysRound%10)+".src");
+}
+if (daysRound <= 999){
+document.images.x.src = eval("c"+Math.floor(daysRound/100)+".src");
+document.images.a.src = eval("c"+Math.floor((daysRound/10)%10)+".src");
+document.images.b.src = eval("c"+Math.floor(daysRound%10)+".src");
+}
+}
+newtime = window.setTimeout("getTime();", 1000);
+}
+//  End -->
+</script>
+
+</head>
+
+<!-- STEP TWO: Insert the onLoad event handler into your BODY tag  -->
+
+<body onLoad="getTime()" style="color: rgb(255, 0, 0); background-color: rgb(0, 0, 0);">
+
+<!-- STEP THREE: Copy this code into the BODY of your HTML document  -->
+<!--
+<div align="center">
+<h3>Countdown to Jim's Retirement</h3>
+</div> -->
+
+<center>
+<table cellpadding="0" cellspacing="0" border="0"
+ style="width: 100%; height: 100%; text-align: center;">
+<td style="text-align: center; vertical-align: middle; width=0;">
+<table cellpadding="0" cellspacing="0" border="0"
+ style="width: 100%; height: 0%; text-align: left;">
+<tr height=0%>
+<td style="text-align: center; vertical-align: middle; width=0;">
+<big style="font-weight: bold;"><big><big>DAYS</big></big></big>
+</td><td style="text-align: center; vertical-align: middle; width=0;">
+<big style="font-weight: bold;"><big><big>:</big></big></big>
+</td><td style="text-align: center; vertical-align: middle; width=0;">
+<big style="font-weight: bold;"><big><big>HOURS</big></big></big>
+</td><td style="text-align: center; vertical-align: middle; width=0;">
+<big style="font-weight: bold;"><big><big>:</big></big></big>
+</td><td style="text-align: center; vertical-align: middle; width=0;">
+<big style="font-weight: bold;"><big><big>MINUTES</big></big></big>
+</td><td style="text-align: center; vertical-align: middle; width=0;">
+<big style="font-weight: bold;"><big><big>:</big></big></big>
+</td><td style="text-align: center; vertical-align: middle; width=0;">
+<big style="font-weight: bold;"><big><big>SECONDS</big></big></big>
+</td>
+</tr>
+<tr>
+<td style="text-align: center; vertical-align: middle; width=0;">
+<img src="digital-clock2/c0.gif" width="90" name=x>
+<img src="digital-clock2/c0.gif" width="90" name=a>
+<img src="digital-clock2/c0.gif" width="90" name=b>
+</td><td style="text-align: center; vertical-align: middle; width=0;">
+<img src="digital-clock2/cc.gif" width="31" name=c>
+</td><td style="text-align: center; vertical-align: middle; width=0;">
+<img src="digital-clock2/c0.gif" width="90" name=y>
+<img src="digital-clock2/c0.gif" width="90" name=z>
+</td><td style="text-align: center; vertical-align: middle; width=0;">
+<img src="digital-clock2/cc.gif" width="31" name=cz>
+</td><td style="text-align: center; vertical-align: middle; width=0;">
+<img src="digital-clock2/c0.gif" width="90" name=d>
+<img src="digital-clock2/c0.gif" width="90" name=e>
+</td><td style="text-align: center; vertical-align: middle; width=0;">
+<img src="digital-clock2/cc.gif" width="31" name=f>
+</td><td style="text-align: center; vertical-align: middle; width=0;">
+<img src="digital-clock2/c0.gif" width="90" name=g>
+<img src="digital-clock2/c0.gif" width="90" name=h>
+<br>
+</td>
+</tr>
+
+</table>
+
+
+</td>
+
+</table>
+
+</center>
+
+</body>
+</html>

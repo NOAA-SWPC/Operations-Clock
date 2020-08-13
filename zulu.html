@@ -1,0 +1,113 @@
+<!-- THREE STEPS TO INSTALL DIGITAL CLOCK:
+
+  1.  Copy the coding into the HEAD of your HTML document
+  2.  Add the onLoad event handler into the BODY tag
+  3.  Put the last coding into the BODY of your HTML document  -->
+
+<!-- STEP ONE: Paste this code into the HEAD of your HTML document  -->
+
+<HEAD>
+
+<SCRIPT LANGUAGE="JavaScript">
+<!-- Original:  Ramandeep Singh (ramandeepji@yahoo.com) -->
+<!-- Web Site:  http://hard-drive.hypermart.net -->
+
+<!-- This script and many more are available free online at -->
+<!-- The JavaScript Source!! http://javascript.internet.com -->
+
+<!-- Begin
+var dn;
+c1 = new Image(); c1.src = "digital-clock/c1.gif";
+c2 = new Image(); c2.src = "digital-clock/c2.gif";
+c3 = new Image(); c3.src = "digital-clock/c3.gif";
+c4 = new Image(); c4.src = "digital-clock/c4.gif";
+c5 = new Image(); c5.src = "digital-clock/c5.gif";
+c6 = new Image(); c6.src = "digital-clock/c6.gif";
+c7 = new Image(); c7.src = "digital-clock/c7.gif";
+c8 = new Image(); c8.src = "digital-clock/c8.gif";
+c9 = new Image(); c9.src = "digital-clock/c9.gif";
+c0 = new Image(); c0.src = "digital-clock/c0.gif";
+cb = new Image(); cb.src = "digital-clock/cb.gif";
+cam = new Image(); cam.src = "digital-clock/cam.gif";
+cpm = new Image(); cpm.src = "digital-clock/cpm.gif";
+function extract(h,m,s,type) {
+if (!document.images) return;
+if (h <= 9) {
+document.images.a.src = cb.src;
+document.images.b.src = eval("c"+h+".src");
+}
+else {
+document.images.a.src = eval("c"+Math.floor(h/10)+".src");
+document.images.b.src = eval("c"+(h%10)+".src");
+}
+if (m <= 9) {
+document.images.d.src = c0.src;
+document.images.e.src = eval("c"+m+".src");
+}
+else {
+document.images.d.src = eval("c"+Math.floor(m/10)+".src");
+document.images.e.src = eval("c"+(m%10)+".src");
+}
+if (s <= 9) {
+document.g.src = c0.src;
+document.images.h.src = eval("c"+s+".src");
+}
+else {
+document.images.g.src = eval("c"+Math.floor(s/10)+".src");
+document.images.h.src = eval("c"+(s%10)+".src");
+}
+if (dn == "AM") document.j.src = cam.src;
+else document.images.j.src = cpm.src;
+}
+function show3() {
+if (!document.images)
+return;
+var Digital = new Date();
+var hours = Digital.getUTCHours();
+var minutes = Digital.getUTCMinutes();
+var seconds = Digital.getUTCSeconds();
+
+dn = "AM";
+if ((hours >= 12) && (minutes >= 1) || (hours >= 13)) {
+dn = "PM";
+hours = hours;
+}
+if (hours == 0)
+hours = 0;
+extract(hours, minutes, seconds, dn);
+setTimeout("show3()", 1000);
+}
+//  End -->
+</script>
+
+</HEAD>
+
+<!-- STEP TWO: Insert the onLoad event handler into your BODY tag  -->
+
+<BODY onLoad="show3()" bgcolor="#000000">
+
+<!-- STEP THREE: Copy this code into the BODY of your HTML document  -->
+<table cellpadding="2" cellspacing="2" border="0"
+ style="width: 100%; height: 100%; text-align: left;">
+  <tbody>
+    <tr>
+      <td style="text-align: center; vertical-align: middle;"><br>
+
+<img src="digital-clock/cb.gif" name=a>
+<img src="digital-clock/cb.gif" name=b>
+<img src="digital-clock/colon.gif" name=c>
+<img src="digital-clock/cb.gif" name=d>
+<img src="digital-clock/cb.gif" name=e>
+<img src="digital-clock/colon.gif" name=f>
+<img src="digital-clock/cb.gif" name=g>
+<img src="digital-clock/cb.gif" name=h>
+<img src="digital-clock/cam.gif" name=j>
+
+</td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+<!-- Script Size:  3.36 KB -->

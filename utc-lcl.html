@@ -1,0 +1,339 @@
+<!-- THREE STEPS TO INSTALL DIGITAL CLOCK:
+
+  1.  Copy the coding into the HEAD of your HTML document
+  2.  Add the onLoad event handler into the BODY tag
+  3.  Put the last coding into the BODY of your HTML document  -->
+
+<!-- STEP ONE: Paste this code into the HEAD of your HTML document  -->
+
+<html>
+
+<head>
+
+<script type="text/javascript" src="settings.js"></script>
+
+<script type="text/javascript">
+<!-- Original:  Ramandeep Singh (ramandeepji@yahoo.com) -->
+<!-- Web Site:  http://hard-drive.hypermart.net -->
+
+<!-- This script and many more are available free online at -->
+<!-- The JavaScript Source!! http://javascript.internet.com -->
+
+<!-- Begin
+var dn;
+c1 = new Image(); c1.src = "digital-clock2/c1.gif";
+c2 = new Image(); c2.src = "digital-clock2/c2.gif";
+c3 = new Image(); c3.src = "digital-clock2/c3.gif";
+c4 = new Image(); c4.src = "digital-clock2/c4.gif";
+c5 = new Image(); c5.src = "digital-clock2/c5.gif";
+c6 = new Image(); c6.src = "digital-clock2/c6.gif";
+c7 = new Image(); c7.src = "digital-clock2/c7.gif";
+c8 = new Image(); c8.src = "digital-clock2/c8.gif";
+c9 = new Image(); c9.src = "digital-clock2/c9.gif";
+c0 = new Image(); c0.src = "digital-clock2/c0.gif";
+cb = new Image(); cb.src = "digital-clock2/cb.gif";
+cblank = new Image(); cblank.src = "digital-clock2/blank.gif";
+cam = new Image(); cam.src = "digital-clock2/cam.gif";
+cpm = new Image(); cpm.src = "digital-clock2/cpm.gif";
+cs1 = new Image(); cs1.src = "digital-clock2/cs1.gif";
+csb = new Image(); csb.src = "digital-clock2/csb.gif";
+ctz = new Image(); ctz.src = "digital-clock2/localshort.gif";
+if (typeof stdOffset != 'undefined') {
+  ctzlst = new Image(); ctzlst.src = timezoneImageLST;
+  ctzldt = new Image(); ctzldt.src = timezoneImageLDT;
+}
+cd1 = new Image(); cd1.src = "digital-clock2/cd1.gif";
+cd2 = new Image(); cd2.src = "digital-clock2/cd2.gif";
+cd3 = new Image(); cd3.src = "digital-clock2/cd3.gif";
+cd4 = new Image(); cd4.src = "digital-clock2/cd4.gif";
+cd5 = new Image(); cd5.src = "digital-clock2/cd5.gif";
+cd6 = new Image(); cd6.src = "digital-clock2/cd6.gif";
+cd0 = new Image(); cd0.src = "digital-clock2/cd0.gif";
+
+
+function extract(h,m,s,mm,dd,type,hu,mmu,ddu,daylight,day,dayu) {
+if (!document.images) return;
+
+if (typeof stdOffset != 'undefined') {
+  if (daylight) document.images.tz.src = ctzldt.src;
+  else document.images.tz.src = ctzlst.src;
+}
+else document.images.tz.src = ctz.src; 
+
+if (mmu <= 9) {
+document.images.kk.src = csb.src;
+document.images.ll.src = eval("c"+mmu+".src");
+}
+else {
+document.images.kk.src = cs1.src;
+document.images.ll.src = eval("c"+(mmu%10)+".src");
+}
+
+if (ddu <= 9) {
+document.images.nn.src = cblank.src;
+document.images.oo.src = eval("c"+ddu+".src");
+}
+else {
+document.images.nn.src = eval("c"+Math.floor(ddu/10)+".src");
+document.images.oo.src = eval("c"+(ddu%10)+".src");
+}
+
+
+
+if (hu <= 9) {
+document.images.aa.src = cb.src;
+document.images.bb.src = eval("c"+hu+".src");
+}
+else {
+document.images.aa.src = eval("c"+Math.floor(hu/10)+".src");
+document.images.bb.src = eval("c"+(hu%10)+".src");
+}
+
+if (mm <= 9) {
+document.images.k.src = csb.src;
+document.images.l.src = eval("c"+mm+".src");
+}
+else {
+document.images.k.src = cs1.src;
+document.images.l.src = eval("c"+(mm%10)+".src");
+}
+
+if (dd <= 9) {
+document.images.n.src = cblank.src;
+document.images.o.src = eval("c"+dd+".src");
+}
+else {
+document.images.n.src = eval("c"+Math.floor(dd/10)+".src");
+document.images.o.src = eval("c"+(dd%10)+".src");
+}
+
+if (h <= 9) {
+document.images.a.src = cblank.src;
+document.images.b.src = eval("c"+h+".src");
+}
+else {
+document.images.a.src = eval("c"+Math.floor(h/10)+".src");
+document.images.b.src = eval("c"+(h%10)+".src");
+}
+if (m <= 9) {
+document.images.d.src = c0.src;
+document.images.e.src = eval("c"+m+".src");
+document.images.dd.src = c0.src;
+document.images.ee.src = eval("c"+m+".src");
+}
+else {
+document.images.d.src = eval("c"+Math.floor(m/10)+".src");
+document.images.e.src = eval("c"+(m%10)+".src");
+document.images.dd.src = eval("c"+Math.floor(m/10)+".src");
+document.images.ee.src = eval("c"+(m%10)+".src");
+
+}
+
+
+if (s <= 9) {
+document.g.src = c0.src;
+document.images.h.src = eval("c"+s+".src");
+document.gg.src = c0.src;
+document.images.hh.src = eval("c"+s+".src");
+}
+else {
+document.images.g.src = eval("c"+Math.floor(s/10)+".src");
+document.images.h.src = eval("c"+(s%10)+".src");
+document.images.gg.src = eval("c"+Math.floor(s/10)+".src");
+document.images.hh.src = eval("c"+(s%10)+".src");
+
+}
+if (dn == "AM") document.j.src = cam.src;
+else document.images.j.src = cpm.src;
+
+document.images.ofweek.src = eval("cd"+day+".src");
+document.images.ofweeku.src = eval("cd"+dayu+".src");
+}
+
+function show3() {
+if (!document.images)
+return;
+var Digital = new Date();
+var hours = Digital.getHours();
+var minutes = Digital.getMinutes();
+var seconds = Digital.getSeconds();
+var month = Digital.getMonth();
+var date = Digital.getDate();
+var hoursu = Digital.getUTCHours();
+var monthu = Digital.getUTCMonth();
+var dateu = Digital.getUTCDate();
+var day = Digital.getDay();
+var dayu = Digital.getUTCDay();
+var timeOffset = Digital.getTimezoneOffset()/60;
+var daylight = false;
+monthu = monthu + 1;
+month = month +1;
+
+if (typeof stdOffset != 'undefined') {
+  if (timeOffset < stdOffset) daylight = true;
+}
+
+dn = "AM";
+if ((hours >= 12) && (minutes >= 0) || (hours >= 13)) {
+dn = "PM";
+hours = hours - 12;
+}
+
+if (hours == 0)
+hours = 12;
+
+extract(hours, minutes, seconds, month, date, dn, hoursu, monthu, dateu, daylight, day, dayu);
+
+setTimeout("show3()", 10);
+
+}
+
+
+//  End -->
+</script>
+
+<style type="text/css">
+
+table {
+	border: 0px;
+	height: 49%;
+	width: 100%;
+}
+
+td.time {
+	width: 100%;
+	vertical-align: middle;
+	text-align: center;
+}
+
+td.date {
+	width: 33%;
+	vertical-align: bottom;
+}
+
+div.divider {
+	height: 2%;
+	display: block;
+	vertical-align: middle;
+}
+
+hr.divider {
+	height: 2px;
+	border: none;
+	color: gray;
+	background-color: grey;
+}
+
+img.timeNumber {
+	width: 195;
+	height: 330;
+}
+
+img.timeColon {
+	width: 60;
+	height: 330;
+}
+
+img.timeLabel {
+	width: 150;
+	height: 330;
+}
+
+img.dateNumber {
+	width: 75;
+}
+
+img.dateSep {
+	width: 26;
+}
+
+img.dateDash {
+	width: 40;
+}
+
+img.dateZone {
+	width: 203;
+}
+
+img.dateDay {
+	width:208;
+}
+
+</style>
+
+</head>
+
+<!-- STEP TWO: Insert the onLoad event handler into your BODY tag  -->
+
+<body onLoad="show3()" bgcolor="#000000">
+
+<!-- STEP THREE: Copy this code into the BODY of your HTML document  -->
+
+<table>
+ <tr>
+  <td colspan="3" class="time">
+	<img class="timeNumber" src="digital-clock2/cb.gif" name=aa>
+	<img class="timeNumber" src="digital-clock2/cb.gif" name=bb>
+	<img class="timeColon"  src="digital-clock2/cc.gif">
+	<img class="timeNumber" src="digital-clock2/cb.gif" name=dd>
+	<img class="timeNumber" src="digital-clock2/cb.gif" name=ee>
+	<img class="timeColon"  src="digital-clock2/cc.gif">
+	<img class="timeNumber" src="digital-clock2/cb.gif" name=gg>
+	<img class="timeNumber" src="digital-clock2/cb.gif" name=hh>
+	<img class="timeLabel"  src="digital-clock2/cz.gif">
+  </td>
+ </tr>
+ <tr>
+  <td class="date" style="text-align:left;">
+	<img class="dateZone" src="digital-clock2/cutc.gif">
+  </td>
+  <td class="date" style="text-align:center;">
+	<img class="dateDay" src="digital-clock2/cd0.gif" name=ofweeku>
+  </td>
+  <td class="date" style="text-align:right;">
+	<img class="dateSep" src="digital-clock2/csb.gif" name=kk>
+	<img class="dateNumber" src="digital-clock2/cb.gif" name=ll>
+	<img class="dateDash"   src="digital-clock2/dash.gif">
+	<img class="dateNumber" src="digital-clock2/cb.gif" name=nn>
+	<img class="dateNumber" src="digital-clock2/cb.gif" name=oo>
+  </td>
+ </tr>
+</table>
+
+<div class="divider">
+  <hr class="divider" />
+</div>
+
+<table>
+ <tr>
+  <td colspan="3" class="time">
+	<img class="timeNumber" src="digital-clock2/cblank.gif" name=a>
+	<img class="timeNumber" src="digital-clock2/cblank.gif" name=b>
+	<img class="timeColon"  src="digital-clock2/cc.gif">
+	<img class="timeNumber" src="digital-clock2/cb.gif" name=d>
+	<img class="timeNumber" src="digital-clock2/cb.gif" name=e>
+	<img class="timeColon"  src="digital-clock2/cc.gif">
+	<img class="timeNumber" src="digital-clock2/cb.gif" name=g>
+	<img class="timeNumber" src="digital-clock2/cb.gif" name=h>
+	<img class="timeLabel"  src="digital-clock2/cam.gif" name=j>
+  </td>
+ </tr>
+ <tr>
+  <td class="date" style="text-align:left;">
+	<img class="dateZone" src="digital-clock2/ctzlst.gif" name=tz>
+  </td>
+  <td class="date" style="text-align:center;">
+	<img class="dateDay" src="digital-clock2/cd0.gif" name=ofweek>
+  </td>
+  <td class="date" style="text-align:right;">
+	<img class="dateSep" src="digital-clock2/csb.gif" name=k>
+	<img class="dateNumber" src="digital-clock2/cb.gif" name=l>
+	<img class="dateDash" src="digital-clock2/dash.gif">
+	<img class="dateNumber" src="digital-clock2/cb.gif" name=n>
+	<img class="dateNumber" src="digital-clock2/cb.gif" name=o>
+  </td>
+ </tr>
+</table>
+
+</body>
+</html>

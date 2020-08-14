@@ -1,4 +1,5 @@
 /* Operations Clock Settings */
+// This file can used to customize utc-lcl.html and is required for countdown.html.
 
 /*** utc-lcl.html clock settings ***/
 // The stdOffset variable is only used to customize the local timezone image in the lower left of the utc-lcl.html clock.

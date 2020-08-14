@@ -9,7 +9,8 @@ matchbox chromium x11-xserver-utils ttf-mscorefonts-installer xwit sqlite3 libns
 
 To do this, run the commands:
 ```console
-sudo apt-get update sudo apt-get dist-upgrade sudo apt-get install matchbox chromium x11-xserver-utils ttf-mscorefonts-installer xwit sqlite3 libnss3 apache2 vim sudo reboot
+sudo apt-get update sudo apt-get dist-upgrade sudo apt-get install matchbox chromium x11-xserver-utils ttf-mscorefonts-installer xwit sqlite3 libnss3 apache2 vim
+sudo reboot
 ```
 
 ## Step 2: Setup Time Sync with NTP

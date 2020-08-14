@@ -9,7 +9,7 @@ This clock was originally developed for the National Hurricane Center in 2004, a
 To launch the clock, either launch locally or via a webserver one of these html files. For best appearance, full screen the browser.
 Make sure the computer running the web browser has a system clock in sync with the atomic clock.
 
-One popular complete clock solution is to set up a raspberry pi connected to a monitor and boot it into a full screen browser with this clock.
+One popular complete clock solution is to set up a raspberry pi connected to a monitor and boot it into a full screen browser with this clock. See PiClockSetup instructions for example instructions.
 
 ## Clocks:
 

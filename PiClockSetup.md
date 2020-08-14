@@ -17,10 +17,10 @@ It is essential to make sure your pi boots with proper time and is synced to a r
 
 To force ntp sync at boot (pi has no battery), place some commands at the bottom of /etc/rc.local:
 ```sh
-    # SYNC CLOCK AT BOOT
-    /etc/init.d/ntp stop
-    ntpd -q -g
-    /etc/init.d/ntp start
+# SYNC CLOCK AT BOOT
+/etc/init.d/ntp stop
+ntpd -q -g
+/etc/init.d/ntp start
 ```
 
 ## Step 3: Choose Clock Code
@@ -28,8 +28,8 @@ The clock can be used locally from a web server on the pi, or remotely from a ce
 ### Local Web
 Clone the clock directory under /var/www and customize to your preferences.
 ```console
-    cd /var/www
-    git clone https://github.com/NOAA=SWPC/Operations-Clock
+cd /var/www
+git clone https://github.com/NOAA=SWPC/Operations-Clock
 ```
 ### Remote Central Web
 Point to website elsewhere on your network or use https://noaa-swpc.github.io/Operations-Clock from the web in Step 5 below.
@@ -39,72 +39,74 @@ This was the hardest part for us because we have several monitors of slightly di
 
 So, first set the framebuffer up by adding this to /boot/config.txt:
 ```sh
-    # 1920x1080 at 32bit depth, Auto mode
-    disable_overscan=1
-    framebuffer_width=1920
-    framebuffer_height=1080
-    framebuffer_depth=32
-    framebuffer_ignore_alpha=1
-    hdmi_pixel_encoding=1
-    hdmi_group=0
+# 1920x1080 at 32bit depth, Auto mode
+disable_overscan=1
+framebuffer_width=1920
+framebuffer_height=1080
+framebuffer_depth=32
+framebuffer_ignore_alpha=1
+hdmi_pixel_encoding=1
+hdmi_group=0
+```
 Next, add this to /etc/rc.local; it waits for a monitor to be attached to the HDMI socket, probes it for its preferred mode, sets that preferred mode and finally resets the framebuffer ready for X to takeover:
-    # Wait for the TV-screen to be turned on...
-    while ! $( tvservice --dumpedid /tmp/edid | fgrep -qv 'Nothing written!' ); do
-	bHadToWaitForScreen=true;
-  	printf "===> Screen is not connected, off or in an unknown mode, waiting for it to become available...\n"
-	sleep 10;
-    done;
-    printf "===> Screen is on, extracting preferred mode...\n"
-    _DEPTH=32;
-    eval $( edidparser /tmp/edid | fgrep 'preferred mode' | tail -1 | sed -Ene 's/^.+(DMT|CEA) \(([0-9]+)\) ([0-9]+)x([0-9]+)[pi]? @.+/_GROUP=\1;_MODE=\2;_XRES=\3;_YRES=\4;/p' );
-    printf "===> Resetting screen to preferred mode: %s-%d (%dx%dx%d)...\n" $_GROUP $_MODE $_XRES $_YRES $_DEPTH
-    tvservice --explicit="$_GROUP $_MODE"
-    sleep 1;
-    printf "===> Resetting frame-buffer to %dx%dx%d...\n" $_XRES $_YRES $_DEPTH
-    fbset --all --geometry $_XRES $_YRES $_XRES $_YRES $_DEPTH -left 0 -right 0 -upper 0 -lower 0;
-    sleep 1;
+```sh
+# Wait for the TV-screen to be turned on...
+while ! $( tvservice --dumpedid /tmp/edid | fgrep -qv 'Nothing written!' ); do
+  bHadToWaitForScreen=true;
+  printf "===> Screen is not connected, off or in an unknown mode, waiting for it to become available...\n"
+  sleep 10;
+ done;
+ printf "===> Screen is on, extracting preferred mode...\n"
+ _DEPTH=32;
+ eval $( edidparser /tmp/edid | fgrep 'preferred mode' | tail -1 | sed -Ene 's/^.+(DMT|CEA) \(([0-9]+)\) ([0-9]+)x([0-9]+)[pi]? @.+/_GROUP=\1;_MODE=\2;_XRES=\3;_YRES=\4;/p' );
+ printf "===> Resetting screen to preferred mode: %s-%d (%dx%dx%d)...\n" $_GROUP $_MODE $_XRES $_YRES $_DEPTH
+ tvservice --explicit="$_GROUP $_MODE"
+ sleep 1;
+ printf "===> Resetting frame-buffer to %dx%dx%d...\n" $_XRES $_YRES $_DEPTH
+ fbset --all --geometry $_XRES $_YRES $_XRES $_YRES $_DEPTH -left 0 -right 0 -upper 0 -lower 0;
+ sleep 1;
 ```
 
 ## Step 5: Launching Chromium
 With that all done, the installation needs to be told to start-up X using a tailored xinitrc (kept on the boot-partition so that it can easily be edited on a non-Linux machine) by adding the following to /etc/rc.local:
 ```sh
-    if [ -f /boot/xinitrc ]; then
-	ln -fs /boot/xinitrc /home/pi/.xinitrc;
-	su - pi -c 'startx' &
-    fi
+ if [ -f /boot/xinitrc ]; then
+   ln -fs /boot/xinitrc /home/pi/.xinitrc;
+   su - pi -c 'startx' &
+ fi
 ```
 And the xinitrc file looks like this and use web source from Step 3 above:
 ```sh
-    #!/bin/sh
-    while true; do
-    # Clean up previously running apps, gracefully at first then harshly
-    killall -TERM chromium 2>/dev/null;
-    killall -TERM matchbox-window-manager 2>/dev/null;
-    sleep 2;
-    killall -9 chromium 2>/dev/null;
-    killall -9 matchbox-window-manager 2>/dev/null;
-    # Clean out existing profile information
-    rm -rf /home/pi/.cache;
-    rm -rf /home/pi/.config;
-    rm -rf /home/pi/.pki;
-    # Generate the bare minimum to keep Chromium happy!
-    mkdir -p /home/pi/.config/chromium/Default
-    sqlite3 /home/pi/.config/chromium/Default/Web\ Data "CREATE TABLE meta(key LONGVARCHAR NOT NULL UNIQUE PRIMARY KEY, value LONGVARCHAR); INSERT INTO meta VALUES('version','46'); CREATE TABLE keywords (foo INTEGER);";
-    # Disable DPMS / Screen blanking
-    xset -dpms
-    xset s off
-    # Reset the framebuffer colour-depth
-    fbset -depth $( cat /sys/module/*fb*/parameters/fbdepth );
-    # Hide the cursor (move it to the bottom-right, comment out if you want mouse interaction)
-    xwit -root -warp $( cat /sys/module/*fb*/parameters/fbwidth ) $( cat /sys/module/*fb*/parameters/fbheight )
-    # Start the window manager (remove "-use_cursor no" if you actually want mouse interaction)
-    matchbox-window-manager -use_titlebar no -use_cursor no &
-    # Start the browser (See http://peter.sh/experiments/chromium-command-line-switches/)
-    # for local web clock
-    #chromium  --app=http://localhost/Operations-Clock/
-    # for central clock
-    #chromium  --app=https://noaa-swpc.github.io/Operations-Clock
-    done;
+ #!/bin/sh
+ while true; do
+ # Clean up previously running apps, gracefully at first then harshly
+ killall -TERM chromium 2>/dev/null;
+ killall -TERM matchbox-window-manager 2>/dev/null;
+ sleep 2;
+ killall -9 chromium 2>/dev/null;
+ killall -9 matchbox-window-manager 2>/dev/null;
+ # Clean out existing profile information
+ rm -rf /home/pi/.cache;
+ rm -rf /home/pi/.config;
+ rm -rf /home/pi/.pki;
+ # Generate the bare minimum to keep Chromium happy!
+ mkdir -p /home/pi/.config/chromium/Default
+ sqlite3 /home/pi/.config/chromium/Default/Web\ Data "CREATE TABLE meta(key LONGVARCHAR NOT NULL UNIQUE PRIMARY KEY, value LONGVARCHAR); INSERT INTO meta VALUES('version','46'); CREATE TABLE keywords (foo INTEGER);";
+ # Disable DPMS / Screen blanking
+ xset -dpms
+ xset s off
+ # Reset the framebuffer colour-depth
+ fbset -depth $( cat /sys/module/*fb*/parameters/fbdepth );
+ # Hide the cursor (move it to the bottom-right, comment out if you want mouse interaction)
+ xwit -root -warp $( cat /sys/module/*fb*/parameters/fbwidth ) $( cat /sys/module/*fb*/parameters/fbheight )
+ # Start the window manager (remove "-use_cursor no" if you actually want mouse interaction)
+ matchbox-window-manager -use_titlebar no -use_cursor no &
+ # Start the browser (See http://peter.sh/experiments/chromium-command-line-switches/)
+ # for local web clock
+ #chromium  --app=http://localhost/Operations-Clock/
+ # for central clock
+ #chromium  --app=https://noaa-swpc.github.io/Operations-Clock
+ done;
 ```
 
 ## Step 6: Fine-tune

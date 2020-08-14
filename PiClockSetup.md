@@ -1,4 +1,4 @@
-# Raspberry Pi Standalone Clock Setup Instructions
+# Raspberry Pi Standalone Clock Example Setup Instructions
 
 The information on booting the pi to a full-screen browser was taken from this page: http://blogs.wcode.org/2013/09/howto-boot-your-raspberry-pi-into-a-fullscreen-browser-kiosk/
 
@@ -11,7 +11,31 @@ To do this, run the commands:
 '''
 sudo apt-get update sudo apt-get dist-upgrade sudo apt-get install matchbox chromium x11-xserver-utils ttf-mscorefonts-installer xwit sqlite3 libnss3 apache2 vim sudo reboot
 '''
-## Step 2: Automatic resolution detection
+
+## Step 2: Setup Time Sync with NTP
+It is essential to make sure your pi boots with proper time and is synced to a reliable time server.  If you have internet connectivity, this should be pretty seamless to an atomic clock.  If not, your pi can be synced to a local time server, even a Windows Time Server.  Be sure to set your timeserver configuration in /etc/ntp.conf.
+
+To force ntp sync at boot (pi has no battery), place some commands at the bottom of /etc/rc.local:
+'''
+# SYNC CLOCK AT BOOT
+/etc/init.d/ntp stop
+ntpd -q -g
+/etc/init.d/ntp start
+'''
+
+## Step 3: Choose Clock Code
+The clock can be used locally from a web server on the pi, or remotely from a central website.
+
+### Local Web
+Clone the clock directory under /var/www and customize to your preferences.
+```
+cd /var/www
+git clone https://github.com/NOAA=SWPC/Operations-Clock
+'''
+### Remote Central Web
+Point to website elsewhere on your network or use https://noaa-swpc.github.io/Operations-Clock from the web in Step 5 below.
+
+## Step 4: Automatic resolution detection
 This was the hardest part for us because we have several monitors of slightly different native resolutions and, through net-booting, only wanted to have one filesystem-image presented to all the Pis. After a few days’ tinkering, I came up with this strategy: set the internal framebuffer to as large as it can be, then detect the monitor’s capabilities and adjust. If you know exactly what resolution your monitor is, just tweak the config.txt file and skip the rest of this step!
 
 So, first set the framebuffer up by adding this to /boot/config.txt:
@@ -44,7 +68,7 @@ fbset --all --geometry $_XRES $_YRES $_XRES $_YRES $_DEPTH -left 0 -right 0 -upp
 sleep 1;
 ```
 
-## Step 3: Launching Chromium
+## Step 5: Launching Chromium
 With that all done, the installation needs to be told to start-up X using a tailored xinitrc (kept on the boot-partition so that it can easily be edited on a non-Linux machine) by adding the following to /etc/rc.local:
 ```
 if [ -f /boot/xinitrc ]; then
@@ -52,7 +76,7 @@ if [ -f /boot/xinitrc ]; then
 	su - pi -c 'startx' &
 fi
 ```
-And the xinitrc file looks like this:
+And the xinitrc file looks like this and use web source from Step 3 above:
 ```
 #!/bin/sh
 while true; do
@@ -80,32 +104,11 @@ xwit -root -warp $( cat /sys/module/*fb*/parameters/fbwidth ) $( cat /sys/module
 matchbox-window-manager -use_titlebar no -use_cursor no &
 # Start the browser (See http://peter.sh/experiments/chromium-command-line-switches/)
 # for local web clock
-      #chromium  --app=http://localhost/clock/
-      # for central clock on PC
-      #chromium  --app=http://192.168.1.50:81/clock/
+#chromium  --app=http://localhost/Operations-Clock/
+# for central clock
+#chromium  --app=https://noaa-swpc.github.io/Operations-Clock
 done;
 ```
-
-## Step 4: Setup time sync with ntp
-It is essential to make sure your pi boots with proper time and is synced to a reliable time server.  If you have internet connectivity, this should be pretty seamless to an atomic clock.  If not, your pi can be synced to a local time server, even a Windows Time Server.  Be sure to set your timeserver configuration in /etc/ntp.conf.
-
-To force ntp sync at boot (pi has no battery), place some commands at the bottom of /etc/rc.local:
-'''
-# SYNC CLOCK AT BOOT
-/etc/init.d/ntp stop
-ntpd -q -g
-/etc/init.d/ntp start
-'''
-
-## Step 5: Adding clock code
-### Local
-Clone the clock directory under /var/www and customize to your preferences.
-```
-cd /var/www
-git clone https://github.com/NOAA=SWPC/Operations-Clock
-'''
-### Central Website
-Point to website elsewhere on your local network or use https://noaa-swpc.github.io/Operations-Clock
 
 ## Step 6: Fine-tune
 Adjust the html image sizes and screen setting in /boot/config.txt to the needs of your monitor/clock.

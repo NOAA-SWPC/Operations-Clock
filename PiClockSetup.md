@@ -9,7 +9,9 @@ matchbox chromium x11-xserver-utils ttf-mscorefonts-installer xwit sqlite3 libns
 
 To do this, run the commands:
 ```console
-sudo apt-get update sudo apt-get dist-upgrade sudo apt-get install matchbox chromium x11-xserver-utils ttf-mscorefonts-installer xwit sqlite3 libnss3 apache2 vim
+sudo apt-get update 
+sudo apt-get dist-upgrade 
+sudo apt-get install matchbox chromium x11-xserver-utils ttf-mscorefonts-installer xwit sqlite3 libnss3 apache2 ntp vim
 sudo reboot
 ```
 
@@ -29,14 +31,14 @@ The clock can be used locally from a web server on the pi, or remotely from a ce
 ### Local Web
 Clone the clock directory under /var/www and customize to your preferences.
 ```console
-cd /var/www
-git clone https://github.com/NOAA=SWPC/Operations-Clock
+cd /var/www/html
+sudo git clone https://github.com/NOAA-SWPC/Operations-Clock
 ```
 ### Remote Central Web
 Point to website elsewhere on your network or use https://noaa-swpc.github.io/Operations-Clock from the web in Step 5 below.
 
 ## Step 4: Automatic resolution detection
-This was the hardest part for us because we have several monitors of slightly different native resolutions and, through net-booting, only wanted to have one filesystem-image presented to all the Pis. After a few days’ tinkering, I came up with this strategy: set the internal framebuffer to as large as it can be, then detect the monitor’s capabilities and adjust. If you know exactly what resolution your monitor is, just tweak the config.txt file and skip the rest of this step!
+This is the strategy: set the internal framebuffer to as large as it can be, then detect the monitor’s capabilities and adjust. If you know exactly what resolution your monitor is, just tweak the config.txt file and skip the rest of this step!
 
 So, first set the framebuffer up by adding this to /boot/config.txt:
 ```sh

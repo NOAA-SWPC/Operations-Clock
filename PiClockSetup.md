@@ -3,16 +3,31 @@
 The information on booting the pi to a full-screen browser was taken from this page: http://blogs.wcode.org/2013/09/howto-boot-your-raspberry-pi-into-a-fullscreen-browser-kiosk/
 
 ## Step 1: Download and Install Raspbian
-For the most part, we’ve used a stock Raspbian raw image (wheezy at the time), updated to the latest versions; but we’ve then installed several additional packages:
+For the most part, we’ve used a stock basic Raspbian raw image, updated to the latest versions; but we’ve then installed several additional packages:
 
-matchbox chromium x11-xserver-utils ttf-mscorefonts-installer xwit sqlite3 libnss3 apache2 vim
+matchbox chromium x11-xserver-utils ttf-mscorefonts-installer xwit sqlite3 libnss3 apache2 ntp xserver-xorg-legacy vim
 
-To do this, run the commands:
+xserver-xorg-legacy was added due to recent upgrades in raspbian xserver and issues creating with running startx as pi user.
+
+Run these commands after you have flashed your microSD card and booted up into raspbian:
 ```console
 sudo apt-get update 
 sudo apt-get dist-upgrade 
-sudo apt-get install matchbox chromium x11-xserver-utils ttf-mscorefonts-installer xwit sqlite3 libnss3 apache2 ntp vim
+sudo apt-get install matchbox chromium x11-xserver-utils ttf-mscorefonts-installer xwit sqlite3 libnss3 apache2 ntp xserver-xorg-legacy vim
 sudo reboot
+```
+
+### Allow pi user to run startx console
+Add pi user to tty group:
+```console
+sudo usermod -a -G tty pi
+```
+Due to security restriction enforced by default, edit /etc/X11/Xwrapper.config and change allowed_users from console to anybody.
+
+### Set to boot in console mode
+Under System Options > Boot / Auto Login in raspi-config
+```console
+sudo raspi-config
 ```
 
 ## Step 2: Setup Time Sync with NTP
@@ -78,7 +93,7 @@ With that all done, the installation needs to be told to start-up X using a tail
    su - pi -c 'startx' &
  fi
 ```
-And the xinitrc file looks like this and use web source from Step 3 above:
+And the /boot/xinitrc file looks like this and use web source from Step 3 above:
 ```sh
  #!/bin/sh
  while true; do
@@ -106,7 +121,7 @@ And the xinitrc file looks like this and use web source from Step 3 above:
    matchbox-window-manager -use_titlebar no -use_cursor no &
    # Start the browser (See http://peter.sh/experiments/chromium-command-line-switches/)
    # for local web clock
-   #chromium  --app=http://localhost/Operations-Clock/
+   chromium  --app=http://localhost/Operations-Clock/
    # for central clock
    #chromium  --app=https://noaa-swpc.github.io/Operations-Clock
  done;

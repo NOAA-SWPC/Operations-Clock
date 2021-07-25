@@ -7,7 +7,7 @@ For the most part, we’ve used a stock basic Raspbian raw image, updated to the
 
 matchbox chromium x11-xserver-utils ttf-mscorefonts-installer xwit sqlite3 libnss3 apache2 ntp xserver-xorg-legacy vim
 
-xserver-xorg-legacy was added due to recent upgrades in raspbian xserver and issues creating with running startx as pi user.
+xserver-xorg-legacy was added due to recent upgrades in raspbian xserver and issues running startx as pi user.
 
 Run these commands after you have flashed your microSD card and booted up into raspbian:
 ```console

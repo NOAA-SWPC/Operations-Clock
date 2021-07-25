@@ -52,7 +52,28 @@ sudo git clone https://github.com/NOAA-SWPC/Operations-Clock
 ### Remote Central Web
 Point to website elsewhere on your network or use https://noaa-swpc.github.io/Operations-Clock from the web in Step 5 below.
 
-## Step 4: Automatic resolution detection
+## Step 4: Screen Resolution
+
+This is usually the trickiest part of the install and depends on your monitor for optimal settings.
+
+### Manual Resolution
+It usually is best to set the resolution, especially on smaller lower-res screens. 1920x1080 works well, but depending on your screen this can be adjusted. Some screens may even require overscan enabled to get it just right.
+
+```sh
+# 1920x1080 at 32bit depth, Auto mode
+disable_overscan=1
+framebuffer_width=1920
+framebuffer_height=1080
+framebuffer_depth=32
+framebuffer_ignore_alpha=1
+hdmi_pixel_encoding=1
+hdmi_group=0
+```
+
+### Automatic Resolution
+
+Results may vary with older low-res monitors, but this can be useful if you want to have one pi install image for different monitors of higher resolutions.
+
 This is the strategy: set the internal framebuffer to as large as it can be, then detect the monitor’s capabilities and adjust. If you know exactly what resolution your monitor is, just tweak the config.txt file and skip the rest of this step!
 
 So, first set the framebuffer up by adding this to /boot/config.txt:

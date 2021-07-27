@@ -1,0 +1,10 @@
+# SYNC CLOCK AT BOOT
+/etc/init.d/ntp stop
+ntpd -q -g
+/etc/init.d/ntp start
+
+# LAUNCH BROWSER
+if [ -f /boot/xinitrc ]; then
+  ln -fs /boot/xinitrc /home/pi/.xinitrc
+  su - pi -c 'startx'
+fi

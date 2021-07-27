@@ -1,19 +1,33 @@
 # Raspberry Pi Standalone Clock Example Setup Instructions
 
-The information on booting the pi to a full-screen browser was taken from this page: http://blogs.wcode.org/2013/09/howto-boot-your-raspberry-pi-into-a-fullscreen-browser-kiosk/
+Initally the information on booting the pi to a full-screen browser was taken from this page: http://blogs.wcode.org/2013/09/howto-boot-your-raspberry-pi-into-a-fullscreen-browser-kiosk/, but has been modified for our use.
 
 ## Step 1: Download and Install Raspbian
-For the most part, we’ve used a stock basic Raspbian raw image, updated to the latest versions; but we’ve then installed several additional packages:
+For the most part, we’ve used a stock basic Raspbian lite image, updated to the latest versions; but we’ve then installed several additional packages:
 
-matchbox chromium x11-xserver-utils ttf-mscorefonts-installer xwit sqlite3 libnss3 apache2 ntp xserver-xorg-legacy vim
+**Required**
+* matchbox - simple window manager
+* midori - preferred low-resource web browser
+* x11-xserver-utils - xserver tools for dpms, etc.
+* xserver-xorg-legacy - added due to recent upgrades in raspbian xserver and issues running startx as pi user.
+* libnss3 - secure connections library
+* apache2 - if running web browser remotely
+* ntp - to sync clock time at boot
+* git - to clone this repo
+* vim - any favorite text editor
 
-xserver-xorg-legacy was added due to recent upgrades in raspbian xserver and issues running startx as pi user.
+**Optional**
+* xwit - to modify cursor
+* unclutter - another way to hide the mouse
+* chromium - modern browser option
+* sqlite3 - for chromium setup
+* ttf-mscorefonts-installer - for displaying customized fonts
 
-Run these commands after you have flashed your microSD card and booted up into raspbian:
+Run these commands after you have flashed your microSD card and booted up into raspbian (modify for your optional packages above):
 ```console
 sudo apt-get update 
 sudo apt-get dist-upgrade 
-sudo apt-get install matchbox chromium x11-xserver-utils ttf-mscorefonts-installer xwit sqlite3 libnss3 apache2 ntp xserver-xorg-legacy vim
+sudo apt-get install matchbox midori x11-xserver-utils xserver-xorg-legacy libnss3 apache2 ntp git vim
 sudo reboot
 ```
 
@@ -54,7 +68,7 @@ Point to website elsewhere on your network or use https://noaa-swpc.github.io/Op
 
 ## Step 4: Screen Resolution
 
-This is usually the trickiest part of the install and depends on your monitor for optimal settings.
+This is usually the trickiest part of the install and depends on your monitor for optimal settings.  There is a manual option and an automatic resolution option.  Given the nature of the full clock display, getting the reolution to fit the monitor and use up the full screen appropriately may require using a resolution that is not the monitor's default.  Be careful using the automatic resolution option, although it should be fine on higher resolution 1080p+ monitors.
 
 ### Manual Resolution
 It usually is best to set the resolution, especially on smaller lower-res screens. 1920x1080 works well, but depending on your screen this can be adjusted. Some screens may even require overscan enabled to get it just right.
@@ -106,49 +120,75 @@ while ! $( tvservice --dumpedid /tmp/edid | fgrep -qv 'Nothing written!' ); do
  sleep 1;
 ```
 
-## Step 5: Launching Chromium
-With that all done, the installation needs to be told to start-up X using a tailored xinitrc (kept on the boot-partition so that it can easily be edited on a non-Linux machine) by adding the following to /etc/rc.local:
+## Step 5: Launching Browser
+
+### /boot/xinitrc
+Create the /boot/xinitrc file using web source from Step 3 above:
+```sh
+ #!/bin/sh
+ while true; do
+   # Clean up previously running apps, gracefully at first then harshly
+   killall -TERM midori 2>/dev/null;
+   killall -TERM matchbox-window-manager 2>/dev/null;
+   sleep 2;
+   killall -9 midori 2>/dev/null;
+   killall -9 matchbox-window-manager 2>/dev/null;
+   # Clean out existing profile information
+   rm -rf /home/pi/.cache;
+   rm -rf /home/pi/.config;
+   rm -rf /home/pi/.pki;
+   # Disable DPMS / Screen blanking
+   xset -dpms
+   xset s off
+   # Start the window manager (remove "-use_cursor no" if you actually want mouse interaction)
+   matchbox-window-manager -use_titlebar no -use_cursor no &
+   # Start the browser
+   # for local web clock
+   midori -e Fullscreen http://localhost/Operations-Clock/
+   # for central clock
+   #midori -e Fullscreen https://noaa-swpc.github.io/Operations-Clock
+ done;
+```
+#### Alternative Options
+The above script should be all that is needed for the xinitrc file, but here are some options listed for reference.
+
+**Browser** - 
+If you prefer to use the chromium browser (appears to use more resources for this simple task), here is some code to optimize it in the xinitrc script:
+```sh
+   # Generate the bare minimum to keep Chromium happy!
+   mkdir -p /home/pi/.config/chromium/Default
+   sqlite3 /home/pi/.config/chromium/Default/Web\ Data "CREATE TABLE meta(key LONGVARCHAR NOT NULL UNIQUE PRIMARY KEY, value LONGVARCHAR); INSERT INTO meta VALUES('version','46'); CREATE TABLE keywords (foo INTEGER);";
+   # for local web clock
+   #chromium --app=http://localhost/Operations-Clock/
+   # for central clock
+   #chromium --app=https://noaa-swpc.github.io/Operations-Clock
+```
+
+**Mouse Tips** - 
+Simple "-use_cursor no" should work on matchbox, but here are more cursor hiding options for reference.
+
+*Use unclutter if just want to hide inactive cursor:*
+```console
+sudo apt-get install unclutter
+```
+*Other mouse hiding options:*
+```sh
+   # Reset the framebuffer colour-depth
+   fbset -depth $( cat /sys/module/*fb*/parameters/fbdepth );
+   # Hide the cursor (move it to the bottom-right, comment out if you want mouse interaction)
+   xwit -root -warp $( cat /sys/module/*fb*/parameters/fbwidth ) $( cat /sys/module/*fb*/parameters/fbheight )
+```
+
+### /etc/rc.local
+With that all done, the installation needs to be told to start-up X using the tailored xinitrc (kept on the boot-partition so that it can easily be edited on a non-Linux machine) by adding the following to the bottom of /etc/rc.local:
 ```sh
  if [ -f /boot/xinitrc ]; then
    ln -fs /boot/xinitrc /home/pi/.xinitrc;
    su - pi -c 'startx' &
  fi
 ```
-And the /boot/xinitrc file looks like this and use web source from Step 3 above:
-```sh
- #!/bin/sh
- while true; do
-   # Clean up previously running apps, gracefully at first then harshly
-   killall -TERM chromium 2>/dev/null;
-   killall -TERM matchbox-window-manager 2>/dev/null;
-   sleep 2;
-   killall -9 chromium 2>/dev/null;
-   killall -9 matchbox-window-manager 2>/dev/null;
-   # Clean out existing profile information
-   rm -rf /home/pi/.cache;
-   rm -rf /home/pi/.config;
-   rm -rf /home/pi/.pki;
-   # Generate the bare minimum to keep Chromium happy!
-   mkdir -p /home/pi/.config/chromium/Default
-   sqlite3 /home/pi/.config/chromium/Default/Web\ Data "CREATE TABLE meta(key LONGVARCHAR NOT NULL UNIQUE PRIMARY KEY, value LONGVARCHAR); INSERT INTO meta VALUES('version','46'); CREATE TABLE keywords (foo INTEGER);";
-   # Disable DPMS / Screen blanking
-   xset -dpms
-   xset s off
-   # Reset the framebuffer colour-depth
-   fbset -depth $( cat /sys/module/*fb*/parameters/fbdepth );
-   # Hide the cursor (move it to the bottom-right, comment out if you want mouse interaction)
-   xwit -root -warp $( cat /sys/module/*fb*/parameters/fbwidth ) $( cat /sys/module/*fb*/parameters/fbheight )
-   # Start the window manager (remove "-use_cursor no" if you actually want mouse interaction)
-   matchbox-window-manager -use_titlebar no -use_cursor no &
-   # Start the browser (See http://peter.sh/experiments/chromium-command-line-switches/)
-   # for local web clock
-   chromium  --app=http://localhost/Operations-Clock/
-   # for central clock
-   #chromium  --app=https://noaa-swpc.github.io/Operations-Clock
- done;
-```
 
 ## Step 6: Fine-tune
 Adjust the html image sizes and screen setting in /boot/config.txt to the needs of your monitor/clock.
 
-And that is all there is to it; just (re)boot your Pi and it should boot, detect the screen and optimise for it, start X, launch Chromium and be ready with your chosen web-page in kiosk-mode!
+And that is all there is to it; just (re)boot your Pi and it should boot, detect the screen and optimise for it, start X, launch Midori and be ready with your chosen web-page in full screen mode!

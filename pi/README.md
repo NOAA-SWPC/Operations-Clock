@@ -1,6 +1,6 @@
 # Raspberry Pi Standalone Clock Example Setup Instructions
 
-Initally the information on booting the pi to a full-screen browser was taken from this page: http://blogs.wcode.org/2013/09/howto-boot-your-raspberry-pi-into-a-fullscreen-browser-kiosk/, but has been modified for our use.
+Initially the information on booting the pi to a full-screen browser was taken from this page: http://blogs.wcode.org/2013/09/howto-boot-your-raspberry-pi-into-a-fullscreen-browser-kiosk/, but has been modified for our use.
 
 ## Step 1: Download and Install Raspbian
 For the most part, we’ve used a stock basic Raspbian lite image, updated to the latest versions; but we’ve then installed several additional packages:

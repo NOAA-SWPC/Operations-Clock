@@ -11,7 +11,7 @@ For the most part, we’ve used a stock basic Raspbian lite image, updated to th
 * x11-xserver-utils - xserver tools for dpms, etc.
 * xserver-xorg-legacy - added due to recent upgrades in raspbian xserver and issues running startx as pi user.
 * libnss3 - secure connections library
-* apache2 - if running web browser remotely
+* apache2 - if running web page locally
 * ntp - to sync clock time at boot
 * git - to clone this repo
 * vim - any favorite text editor

@@ -198,4 +198,4 @@ fi
 ## Step 6: Fine-tune
 Adjust the html image sizes and screen setting in /boot/config.txt to the needs of your monitor/clock.
 
-And that is all there is to it; just (re)boot your Pi and it should boot, detect the screen and optimise for it, start X, launch Midori and be ready with your chosen web-page in full screen mode!
+That is all. Reboot your Pi and it should start X and launch Midori into your clock web page in full screen mode!

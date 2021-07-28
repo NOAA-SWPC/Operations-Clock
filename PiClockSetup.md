@@ -125,29 +125,35 @@ while ! $( tvservice --dumpedid /tmp/edid | fgrep -qv 'Nothing written!' ); do
 ### /boot/xinitrc
 Create the /boot/xinitrc file using web source from Step 3 above:
 ```sh
- #!/bin/sh
- while true; do
-   # Clean up previously running apps, gracefully at first then harshly
-   killall -TERM midori 2>/dev/null;
-   killall -TERM matchbox-window-manager 2>/dev/null;
-   sleep 2;
-   killall -9 midori 2>/dev/null;
-   killall -9 matchbox-window-manager 2>/dev/null;
-   # Clean out existing profile information
-   rm -rf /home/pi/.cache;
-   rm -rf /home/pi/.config;
-   rm -rf /home/pi/.pki;
-   # Disable DPMS / Screen blanking
-   xset -dpms
-   xset s off
-   # Start the window manager (remove "-use_cursor no" if you actually want mouse interaction)
-   matchbox-window-manager -use_titlebar no -use_cursor no &
-   # Start the browser
-   # for local web clock
-   midori -e Fullscreen http://localhost/Operations-Clock/
-   # for central clock
-   #midori -e Fullscreen https://noaa-swpc.github.io/Operations-Clock
- done;
+#!/bin/sh
+
+while true
+do
+  # Clean up previously running apps, gracefully at first then harshly
+  killall -TERM midori 2>/dev/null;
+  killall -TERM matchbox-window-manager 2>/dev/null;
+  sleep 2;
+  killall -9 midori 2>/dev/null;
+  killall -9 matchbox-window-manager 2>/dev/null;
+
+  # Clean out existing profile information
+  rm -rf /home/pi/.cache;
+  rm -rf /home/pi/.config;
+  rm -rf /home/pi/.pki;
+
+  # Disable DPMS / Screen blanking
+  xset -dpms
+  xset s off
+
+  # Start the window manager (remove "-use_cursor no" if you actually want mouse interaction)
+  matchbox-window-manager -use_titlebar no -use_cursor no &
+
+  # Start the browser
+  # for local web clock
+  midori -e Fullscreen http://localhost/Operations-Clock/
+  # for central clock
+  #midori -e Fullscreen https://noaa-swpc.github.io/Operations-Clock
+done
 ```
 #### Alternative Options
 The above script should be all that is needed for the xinitrc file, but here are some options listed for reference.
@@ -155,13 +161,14 @@ The above script should be all that is needed for the xinitrc file, but here are
 **Browser** - 
 If you prefer to use the chromium browser (appears to use more resources for this simple task), here is some code to optimize it in the xinitrc script:
 ```sh
-   # Generate the bare minimum to keep Chromium happy!
-   mkdir -p /home/pi/.config/chromium/Default
-   sqlite3 /home/pi/.config/chromium/Default/Web\ Data "CREATE TABLE meta(key LONGVARCHAR NOT NULL UNIQUE PRIMARY KEY, value LONGVARCHAR); INSERT INTO meta VALUES('version','46'); CREATE TABLE keywords (foo INTEGER);";
-   # for local web clock
-   #chromium --app=http://localhost/Operations-Clock/
-   # for central clock
-   #chromium --app=https://noaa-swpc.github.io/Operations-Clock
+# Generate the bare minimum to keep Chromium happy!
+mkdir -p /home/pi/.config/chromium/Default
+sqlite3 /home/pi/.config/chromium/Default/Web\ Data "CREATE TABLE meta(key LONGVARCHAR NOT NULL UNIQUE PRIMARY KEY, value LONGVARCHAR); INSERT INTO meta VALUES('version','46'); CREATE TABLE keywords (foo INTEGER);";
+
+# for local web clock
+#chromium --app=http://localhost/Operations-Clock/
+# for central clock
+#chromium --app=https://noaa-swpc.github.io/Operations-Clock
 ```
 
 **Mouse Tips** - 
@@ -173,19 +180,19 @@ sudo apt-get install unclutter
 ```
 *Other mouse hiding options:*
 ```sh
-   # Reset the framebuffer colour-depth
-   fbset -depth $( cat /sys/module/*fb*/parameters/fbdepth );
-   # Hide the cursor (move it to the bottom-right, comment out if you want mouse interaction)
-   xwit -root -warp $( cat /sys/module/*fb*/parameters/fbwidth ) $( cat /sys/module/*fb*/parameters/fbheight )
+# Reset the framebuffer colour-depth
+fbset -depth $( cat /sys/module/*fb*/parameters/fbdepth );
+# Hide the cursor (move it to the bottom-right, comment out if you want mouse interaction)
+xwit -root -warp $( cat /sys/module/*fb*/parameters/fbwidth ) $( cat /sys/module/*fb*/parameters/fbheight )
 ```
 
 ### /etc/rc.local
 With that all done, the installation needs to be told to start-up X using the tailored xinitrc (kept on the boot-partition so that it can easily be edited on a non-Linux machine) by adding the following to the bottom of /etc/rc.local:
 ```sh
- if [ -f /boot/xinitrc ]; then
-   ln -fs /boot/xinitrc /home/pi/.xinitrc;
-   su - pi -c 'startx' &
- fi
+if [ -f /boot/xinitrc ]; then
+  ln -fs /boot/xinitrc /home/pi/.xinitrc;
+  su - pi -c 'startx' &
+fi
 ```
 
 ## Step 6: Fine-tune

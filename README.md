@@ -26,5 +26,7 @@ index.html points to utc-lcl.html as the preferred clock, but any of the other c
 
 The utc-lcl clock can be customized with your specific local timezone in the bottom left using the settings.js file.  Samples are provided for eastern and central timezones in the [settings.js](settings.js) file and under [config](config) directory. Currently only local tz images available for EST, EDT, CST, CDT.  More images can be made for other timezones.
 
-The countdown clock must be configured with a date in the [settings.js](settings.js) file. See sample in settings file or under [config](config).
+The countdown clock can be configured either:
+* With a date in the [settings.js](settings.js) file. See sample in settings file or under [config](config)
+* With a URL argument "target": ```countdown.html?target=2026-01-01T00:00:00-07:00``` (example for New Years in the Mountain Standard Time Zone, UTC-7)
 

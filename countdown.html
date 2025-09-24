@@ -24,7 +24,11 @@ now = new Date();
 
 
 
-later = countdownDate;
+
+const urlParams = new URLSearchParams(window.location.search);
+const targetDateString = urlParams.get('target');
+const later = targetDateString ? new Date(targetDateString).getTime() : countdownDate;
+
 left = later-now;
 days = left / 1000 / 60 / 60 / 24;
 daysRound = Math.floor(days);
